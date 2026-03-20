@@ -522,3 +522,4 @@ Validation:
 [2026-03-20 19:56:47] Corrected audit note: Render startup now uses ensure_admin non-blocking and executes gunicorn with explicit PORT fallback ${PORT:-10000}.
 [2026-03-20 20:02:04] Admin login troubleshooting hardening: updated portfolio/management/commands/ensure_admin.py to support both ADMIN_* and DJANGO_SUPERUSER_* env vars, and to log existing superuser usernames when credentials are missing so Render logs reveal the correct login username.
 [2026-03-20 20:21:31] Render diagnostics enhancement: added explicit [BOOT] echo lines to Procfile and render.yaml start commands to always emit runtime logs (startup marker, effective PORT, and username env presence) before ensure_admin/gunicorn.
+[2026-03-20 20:31:39] Render reliability fix for missing runtime logs: updated render.yaml buildCommand to run python manage.py ensure_admin after migrate so admin creation/reset is visible in build logs and not dependent on runtime log stream.
