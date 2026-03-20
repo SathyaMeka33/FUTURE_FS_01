@@ -511,3 +511,4 @@ Validation:
 [2026-03-20 17:09:07] GitHub publish complete: connected origin to https://github.com/SathyaMeka33/FUTURE_FS_01.git, rebased onto remote main, and pushed full Django portfolio project with deployment configuration files.
 [2026-03-20 17:23:06] Render domain update: set DJANGO_ALLOWED_HOSTS in render.yaml to future-fs-01-zdsi.onrender.com for deployed service alignment.
 [2026-03-20 17:35:07] Render deploy fix attempt for status 127: updated render.yaml buildCommand to use python -m pip and startCommand to python -m gunicorn with explicit bind 0.0.0.0:; updated Procfile accordingly for consistency.
+[2026-03-20 18:01:28] Render DisallowedHost fix: expanded default DJANGO_ALLOWED_HOSTS fallback in portfolio_site/settings.py to include future-fs-01-zdsi.onrender.com and .onrender.com to prevent host header rejection when env var is missing.
