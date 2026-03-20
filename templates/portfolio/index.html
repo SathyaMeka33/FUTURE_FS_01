@@ -22,7 +22,13 @@
 <li><a href="#coding-profiles" class="nav-link">Coding Profiles</a></li>
 <li><a href="#skills" class="nav-link">Skills</a></li>
 <li><a href="#contact" class="nav-link">Contact</a></li>
-<li class="mobile-resume-item"><a href="{% static 'Sathya Resume.pdf' %}" class="nav-link" target="_blank" rel="noopener noreferrer">Resume</a></li>
+<li class="mobile-resume-item">
+  {% if about and about.resume_file %}
+  <a href="{{ about.resume_file.url }}" class="nav-link" target="_blank" rel="noopener noreferrer">Resume</a>
+  {% else %}
+  <a href="{% static 'Sathya Resume.pdf' %}" class="nav-link" target="_blank" rel="noopener noreferrer">Resume</a>
+  {% endif %}
+</li>
 {% endblock %}
 
 {% block content %}
@@ -62,7 +68,11 @@
     <span id="typewriterText" class="typing-text"></span><span class="typing-cursor" aria-hidden="true">|</span>
   </div>
 
+  {% if about and about.resume_file %}
+  <a href="{{ about.resume_file.url }}" class="hero-resume-btn fi magnetic" style="--d:.40s" target="_blank" rel="noopener noreferrer">Download Resume</a>
+  {% else %}
   <a href="{% static 'Sathya Resume.pdf' %}" class="hero-resume-btn fi magnetic" style="--d:.40s" target="_blank" rel="noopener noreferrer">Download Resume</a>
+  {% endif %}
 </section>
 
 <section id="about" class="reveal">

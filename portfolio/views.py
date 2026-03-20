@@ -95,6 +95,7 @@ def about_page(request):
 	timeline_entries = TimelineEntry.objects.filter(is_active=True, page="about")
 	achievements = Achievement.objects.filter(is_active=True)[:3]
 	certifications = Certification.objects.filter(is_active=True)
+	contact_info = _contact_info()
 	return render(
 		request,
 		"portfolio/about.html",
@@ -105,13 +106,23 @@ def about_page(request):
 			"certifications": certifications,
 			"skills_count": Skill.objects.count(),
 			"projects_count": Project.objects.count(),
+			"contact_info": contact_info,
 		},
 	)
 
 
 def skills_page(request):
 	skills = Skill.objects.all()
-	return render(request, "portfolio/skills.html", {"skills": skills, "skill_groups": _skill_groups()})
+	return render(
+		request,
+		"portfolio/skills.html",
+		{
+			"skills": skills,
+			"skill_groups": _skill_groups(),
+			"about": About.objects.order_by("-updated_at").first(),
+			"contact_info": _contact_info(),
+		},
+	)
 
 
 def projects_page(request):
@@ -137,6 +148,7 @@ def projects_page(request):
 		"search_query": search_query,
 		"selected_category": selected_category,
 		"categories": Project.CATEGORY_CHOICES,
+		"about": About.objects.order_by("-updated_at").first(),
 		"contact_info": _contact_info(),
 	}
 	return render(request, "portfolio/projects.html", context)
@@ -160,6 +172,7 @@ def contact_page(request):
 
 	context = {
 		"form": form,
+		"about": About.objects.order_by("-updated_at").first(),
 		"contact_info": _contact_info(),
 		"whatsapp_redirect_url": request.session.pop("whatsapp_redirect_url", ""),
 	}

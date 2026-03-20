@@ -55,7 +55,7 @@
       <p><strong>Phone:</strong> {{ contact_info.phone|default:'+91 9703629727' }}</p>
       <p><strong>Email:</strong> {{ contact_info.email|default:'innovativeden0@gmail.com' }}</p>
       <div class="social-row">
-        <a class="social-btn magnetic" href="https://www.linkedin.com/in/mekasathya/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a class="social-btn magnetic" href="{{ contact_info.linkedin_url|default:'https://www.linkedin.com/in/mekasathya/' }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       </div>
       <div class="chips" style="margin-top:24px;">
         <span class="chip magnetic">Software Internships</span>

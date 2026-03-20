@@ -39,7 +39,11 @@
       </div>
 
       <div class="section-actions" style="margin-top:20px;">
+        {% if about and about.resume_file %}
+        <a href="{{ about.resume_file.url }}" class="btn magnetic" target="_blank" rel="noopener noreferrer">Download Resume</a>
+        {% else %}
         <a href="{% static 'Sathya Resume.pdf' %}" class="btn magnetic" target="_blank" rel="noopener noreferrer">Download Resume</a>
+        {% endif %}
       </div>
     </div>
   </div>
