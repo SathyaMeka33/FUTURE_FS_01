@@ -8,12 +8,35 @@ class Command(BaseCommand):
     help = "Create or update an admin user from environment variables."
 
     def handle(self, *args, **options):
-        username = os.getenv("ADMIN_USERNAME", "").strip()
-        password = os.getenv("ADMIN_PASSWORD", "").strip()
-        email = os.getenv("ADMIN_EMAIL", "admin@example.com").strip() or "admin@example.com"
+        username = (
+            os.getenv("ADMIN_USERNAME", "").strip()
+            or os.getenv("DJANGO_SUPERUSER_USERNAME", "").strip()
+        )
+        password = (
+            os.getenv("ADMIN_PASSWORD", "").strip()
+            or os.getenv("DJANGO_SUPERUSER_PASSWORD", "").strip()
+        )
+        email = (
+            os.getenv("ADMIN_EMAIL", "").strip()
+            or os.getenv("DJANGO_SUPERUSER_EMAIL", "").strip()
+            or "admin@example.com"
+        )
 
         if not username or not password:
-            self.stdout.write("ensure_admin skipped: ADMIN_USERNAME/ADMIN_PASSWORD not set.")
+            User = get_user_model()
+            existing = list(
+                User.objects.filter(is_superuser=True).values_list("username", flat=True)
+            )
+            if existing:
+                self.stdout.write(
+                    "ensure_admin skipped: no ADMIN/DJANGO_SUPERUSER credentials set. "
+                    f"Existing superusers: {', '.join(existing)}"
+                )
+            else:
+                self.stdout.write(
+                    "ensure_admin skipped: no ADMIN/DJANGO_SUPERUSER credentials set "
+                    "and no superuser exists."
+                )
             return
 
         User = get_user_model()
@@ -35,4 +58,4 @@ class Command(BaseCommand):
         user.save()
 
         action = "created" if created else "updated"
-        self.stdout.write(f"ensure_admin: {action} superuser '{username}'.")
+    self.stdout.write(f"ensure_admin: {action} superuser '{username}'.")
