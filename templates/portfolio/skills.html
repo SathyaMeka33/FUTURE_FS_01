@@ -1,0 +1,46 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}Skills | Sathya Narayana Meka{% endblock %}
+{% block meta_description %}Skills section managed from Django admin.{% endblock %}
+
+{% block content %}
+<section class="reveal" style="padding-top:130px;" data-skills-section id="skills">
+  <h1 class="section-title">Skills</h1>
+  <p class="section-subtitle">A one-page overview of my programming, tools, and core engineering skills.</p>
+
+  <div class="skills-showcase reveal">
+    {% for group in skill_groups %}
+    {% if not forloop.first %}
+    <div class="skills-band reveal">
+      <h3 class="skills-band-title">{{ group.label|upper }}</h3>
+    </div>
+    {% endif %}
+
+    <div class="skill-card-grid">
+      {% for skill in group.items %}
+      <article class="skill-tile magnetic">
+        <div class="skill-icon">
+          {% if skill.icon_source %}
+          <img src="{{ skill.icon_source }}" alt="{{ skill.name }} logo" />
+          {% else %}
+          <img src="{% static 'images/brain-circuit.png' %}" alt="Skill icon" />
+          {% endif %}
+        </div>
+        <p class="skill-name">{{ skill.name|upper }}</p>
+        <p class="skill-name" style="font-size:.9rem; opacity:.85;">{{ skill.percentage }}%</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% empty %}
+    <div class="skill-card-grid">
+      <article class="skill-tile magnetic">
+        <div class="skill-icon"><img src="{% static 'images/brain-circuit.png' %}" alt="Skill icon" /></div>
+        <p class="skill-name">NO SKILLS ADDED</p>
+      </article>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+

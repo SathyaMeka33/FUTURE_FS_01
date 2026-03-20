@@ -1,0 +1,88 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Projects | Sathya Narayana Meka{% endblock %}
+{% block meta_description %}Dynamic projects with search, filtering, and pagination.{% endblock %}
+
+{% block content %}
+<section class="reveal" style="padding-top:130px;" id="projects">
+  <h1 class="section-title">Projects</h1>
+  <p class="section-subtitle">Projects that demonstrate practical engineering, backend integration, and collaborative problem-solving.</p>
+
+  <form method="get" class="filters reveal" style="gap:12px; flex-wrap:wrap;">
+    <input
+      type="text"
+      name="q"
+      value="{{ search_query }}"
+      placeholder="Search project title, tech, description"
+      style="padding:10px 14px; border-radius:999px; border:1px solid rgba(0,0,0,.15); min-width:260px;"
+    />
+    <button type="submit" class="filter-btn active magnetic">Search</button>
+    {% if search_query or selected_category != 'all' %}
+    <a href="{% url 'projects' %}" class="filter-btn magnetic" style="text-decoration:none;">Reset</a>
+    {% endif %}
+  </form>
+
+  <div class="filters reveal">
+    <a href="?q={{ search_query|urlencode }}&category=all" class="filter-btn magnetic {% if selected_category == 'all' %}active{% endif %}">All</a>
+    {% for value, label in categories %}
+    <a href="?q={{ search_query|urlencode }}&category={{ value }}" class="filter-btn magnetic {% if selected_category == value %}active{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="projects-grid reveal">
+    {% for project in page_obj %}
+    <article class="project-card" data-category="{{ project.category }}" data-modal-title="{{ project.title }}" data-modal-text="{{ project.description }}" data-modal-tags="{{ project.tech_stack }}" data-github="{{ project.github_link }}" data-live="{{ project.live_demo_link }}">
+      <div class="project-visual">
+        {% if project.image_source %}
+        <img src="{{ project.image_source }}" alt="{{ project.title }} preview" />
+        {% endif %}
+        <div class="project-overlay"></div>
+      </div>
+      <div class="project-content">
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.description|truncatechars:130 }}</p>
+        <div class="tags">
+          {% for tag in project.tech_tags %}
+          <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        <div class="project-actions">
+          <a href="#" class="magnetic project-github-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="#" class="magnetic project-live-link" target="_blank" rel="noopener noreferrer">Live Demo</a>
+          <button class="open-project-modal magnetic" type="button">Details</button>
+        </div>
+      </div>
+    </article>
+    {% empty %}
+    <article class="preview-card">
+      <h3>No projects found</h3>
+      <p>Add projects from admin or change search/filter values.</p>
+    </article>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="section-actions" style="justify-content:center; margin-top:22px;">
+    {% if page_obj.has_previous %}
+    <a class="btn-outline magnetic" href="?q={{ search_query|urlencode }}&category={{ selected_category }}&page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    <span class="chip">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a class="btn magnetic" href="?q={{ search_query|urlencode }}&category={{ selected_category }}&page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_after_main %}
+<div id="projectModal" class="project-modal" aria-hidden="true">
+  <div class="modal-panel">
+    <button id="modalClose" class="modal-close" type="button" aria-label="Close modal">×</button>
+    <h2 id="modalTitle" class="section-title" style="font-size:2.3rem; margin-bottom:8px;">Project details</h2>
+    <p id="modalText" class="section-subtitle" style="margin-bottom:14px;">Details.</p>
+    <div id="modalTags" class="tags"></div>
+  </div>
+</div>
+{% endblock %}
+

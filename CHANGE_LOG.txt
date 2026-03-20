@@ -1,0 +1,509 @@
+Portfolio Work Change Log
+=========================
+
+Date: 2026-03-20
+Requested by user:
+- From now on, all assistant actions/changes must be recorded in this text file so unwanted changes can be tracked.
+
+Actions recorded:
+1. Created this change log file.
+2. Added a persistent user preference note in memory to always maintain this log.
+
+Format going forward:
+- Timestamp
+- Files touched
+- What was changed
+- Why it was changed
+- Validation result
+
+Timestamp: 2026-03-20 00:31:40
+Request:
+- Create required tables for each section/webpage so content is editable from admin and reflected on website.
+- Add image URL options for skills, projects, and achievements.
+- Add timeline extension support.
+
+Files touched:
+- portfolio/models.py
+- portfolio/admin.py
+- portfolio/serializers.py
+- portfolio/views.py
+- portfolio/api_urls.py
+- portfolio/management/commands/seed_portfolio.py
+- templates/portfolio/index.html
+- templates/portfolio/about.html
+- templates/portfolio/skills.html
+- templates/portfolio/projects.html
+- templates/portfolio/contact.html
+- README_DJANGO_PORTFOLIO.md
+- portfolio/migrations/0002_achievement_contactinfo_timelineentry_and_more.py
+
+What changed:
+1. Added new models/tables:
+	- Achievement
+	- TimelineEntry
+	- ContactInfo
+2. Expanded existing models:
+	- Skill: category, icon_image, icon_url
+	- Project: image_url + image fallback support
+	- About: subtitle, career_objective, education_snapshot, intro_secondary, profile_image_url
+3. Updated admin with list/search/filter controls for all new and updated models.
+4. Updated templates to render dynamic data:
+	- Home: dynamic skills icons, timeline, achievements
+	- About: dynamic timeline and highlights
+	- Skills: grouped dynamic categories with image upload/URL support
+	- Projects: image upload or image URL rendering
+	- Contact: dynamic contact info block
+5. Extended APIs:
+	- /api/achievements/
+	- /api/timeline/
+	- /api/contact-info/
+6. Updated seed command to populate all new tables and fields.
+
+Why:
+- To make each portfolio section editable from Django admin and instantly reflect on webpages.
+
+Validation:
+- makemigrations: success
+- migrate: success
+- seed_portfolio --reset: success
+- manage.py check: no issues
+- File diagnostics: no errors found in edited files
+
+Timestamp: 2026-03-20 00:43:02
+Request:
+- New skill added in admin was not visibly reflecting on webpage.
+
+Files touched:
+- portfolio/views.py
+
+What changed:
+1. Updated homepage skills preview query from default ordering to latest-first:
+	- skills_home now uses Skill.objects.order_by("-id")[:4]
+2. This ensures newly added admin skills appear quickly in the home skills preview cards.
+
+Why:
+- New skills existed in DB but could be hidden from home preview due category/order and 4-item limit.
+
+Validation:
+- manage.py check: no issues
+
+Timestamp: 2026-03-20 10:06:34
+Request:
+- Ensure admin updates also reflect in root static `index.html`.
+
+Files touched:
+- index.html
+- js/script.js
+
+What changed:
+1. Added stable DOM IDs in `index.html` for dynamic content zones:
+	- About subtitle, career objective, education snapshot
+	- Home timeline, projects grid, achievements grid, skills grid
+2. Enhanced `js/script.js` to hydrate home content from Django API endpoints:
+	- `/api/about/`, `/api/skills/`, `/api/projects/`, `/api/achievements/`, `/api/timeline/`
+	- Replaces static cards/text with latest admin-managed data
+	- Updates project/skill counters to live totals
+3. Added admin-change polling in static JS:
+	- Polls `/api/portfolio-signature/` every 10 seconds
+	- Automatically reloads page when signature changes (add/update/delete in admin)
+
+Why:
+- Root static `index.html` was hardcoded and did not automatically reflect Django admin content.
+
+Validation:
+- Diagnostics: no errors in edited `index.html` and `js/script.js`
+
+Timestamp: 2026-03-20 10:10:24
+Request:
+- Apply the same admin-driven reflection to all static pages (`about.html`, `projects.html`, `skills.html`, `contact.html`) as done for home.
+
+Files touched:
+- about.html
+- projects.html
+- skills.html
+- contact.html
+- js/script.js
+
+What changed:
+1. Added stable DOM IDs/placeholders in all static pages for safe API content injection.
+2. Extended `js/script.js` with page-specific API hydration:
+	- About page: subtitle, intros, profile image, chips, counters, timeline, highlights.
+	- Projects page: complete project grid from `/api/projects/` with modal/filter compatibility.
+	- Skills page: grouped skill grids from `/api/skills/` by category.
+	- Contact page: subtitle and direct reach details from `/api/contact-info/`.
+3. Refactored project-card link and modal behavior to support dynamically rendered cards.
+4. Kept signature polling (`/api/portfolio-signature/`) active for static pages so admin add/edit/delete auto-reloads open pages.
+
+Why:
+- To ensure every static section page reflects admin data updates instead of remaining hardcoded.
+
+Validation:
+- Diagnostics: no errors in edited files
+
+Timestamp: 2026-03-20 10:13:11
+Request:
+- Run Django development server.
+
+Actions recorded:
+1. Configured Python environment for workspace (`venv`, Python 3.12.3).
+2. Started server in background using:
+	- `python manage.py runserver`
+3. Verified server response:
+	- `http://127.0.0.1:8000` returned HTTP 200.
+
+Why:
+- To run the portfolio application locally so dynamic admin-backed updates are visible.
+
+Timestamp: 2026-03-20 10:25:28
+Request:
+- Add a certifications section to display all certifications and allow image adding.
+
+Files touched:
+- portfolio/models.py
+- portfolio/admin.py
+- portfolio/serializers.py
+- portfolio/views.py
+- portfolio/api_urls.py
+- portfolio/management/commands/seed_portfolio.py
+- portfolio/migrations/0003_certification.py
+- templates/portfolio/index.html
+- templates/portfolio/about.html
+- static/js/script.js
+- index.html
+- about.html
+- js/script.js
+
+What changed:
+1. Added new `Certification` model with admin-editable fields:
+	- title, issuer, description
+	- image upload (`image`) and image URL fallback (`image_url`)
+	- credential URL, issued date, display order, active flag
+2. Registered Certifications in Django admin with list/search/filter controls.
+3. Added API support:
+	- Serializer + viewset + route: `/api/certifications/`
+4. Connected certifications to dynamic templates:
+	- New Certifications section on home page (`templates/portfolio/index.html`)
+	- Certifications block on about page (`templates/portfolio/about.html`)
+5. Updated static pages and hydration:
+	- Added certifications sections/placeholders in `index.html` and `about.html`
+	- Extended `js/script.js` to fetch/render certifications from API
+	- Updated section observer list in `static/js/script.js` for certifications nav highlighting
+6. Extended admin-change signature payload in `portfolio/views.py` so certification changes trigger auto-refresh.
+7. Extended seed command with sample certification data.
+
+Validation:
+- makemigrations portfolio: generated `0003_certification.py`
+- migrate: applied `portfolio.0003_certification` successfully
+- manage.py check: no issues
+- File diagnostics: no errors in edited files
+
+Timestamp: 2026-03-20 10:34:22
+Request:
+- Convert static portfolio fully to dynamic Django flow and ensure admin updates reflect automatically; provide proper run instructions.
+
+Files touched:
+- portfolio/views.py
+- templates/portfolio/about.html
+- README_DJANGO_PORTFOLIO.md
+
+What changed:
+1. Finalized About page counters to be fully dynamic from DB:
+	- `projects_count` and `skills_count` now passed from view and rendered in template.
+2. Updated README to enforce Django runtime workflow:
+	- Explicitly states not to use VS Code Live Server.
+	- Adds certifications model/API/admin workflow updates.
+	- Documents `python manage.py runserver` as required server mode.
+
+Why:
+- To ensure every relevant section reflects admin-managed values and avoid stale hardcoded frontend values.
+
+Validation:
+- manage.py check: no issues
+- Diagnostics: no errors in edited files
+
+Timestamp: 2026-03-20 10:40:03
+Request:
+- Make B.Tech CGPA editable from admin.
+
+Files touched:
+- portfolio/models.py
+- portfolio/admin.py
+- portfolio/serializers.py
+- portfolio/views.py
+- portfolio/management/commands/seed_portfolio.py
+- portfolio/migrations/0004_about_cgpa.py
+- templates/portfolio/index.html
+- templates/portfolio/about.html
+- index.html
+- about.html
+- js/script.js
+
+What changed:
+1. Added `cgpa` field to `About` model:
+	- DecimalField(max_digits=4, decimal_places=2)
+	- Validators 0 to 10
+2. Exposed CGPA in Django admin for About model list/edit screens.
+3. Included CGPA in About serializer and snapshot signature payload.
+4. Updated seed data to include default `cgpa=9.00` for About.
+5. Replaced hardcoded CGPA in dynamic templates (`templates/portfolio/index.html`, `templates/portfolio/about.html`) with admin-driven `about.cgpa` value.
+6. Updated static-page hydration (`js/script.js`) so CGPA counter updates from `/api/about/`.
+7. Set static fallback CGPA counters in `index.html` and `about.html` to neutral default (`0`) until API/admin value loads.
+
+Validation:
+- makemigrations portfolio: generated `0004_about_cgpa.py`
+- migrate: applied `portfolio.0004_about_cgpa` successfully
+- manage.py check: no issues
+- diagnostics: no errors in edited files
+
+Timestamp: 2026-03-20 11:06:57
+Request:
+- Remove shake effect of person image in hero section.
+
+Files touched:
+- static/js/script.js
+- js/script.js
+
+What changed:
+1. Removed mousemove-driven transform block for `.person-img` from both scripts.
+2. Hero portrait now stays stable (no cursor-based shake/parallax movement).
+
+Why:
+- To eliminate distracting shake effect in hero section portrait.
+
+Validation:
+- diagnostics: no errors in edited script files
+
+Timestamp: 2026-03-20 11:16:24
+Request:
+- Add Explore Projects button on Career OS project also.
+
+Files touched:
+- index.html
+
+What changed:
+1. Added `Explore Projects` button/action block to the Career OS project preview card in the static home projects section.
+
+Why:
+- To keep project CTA consistent across both visible preview cards.
+
+Validation:
+- diagnostics: no errors in `index.html`
+
+Timestamp: 2026-03-20 11:20:06
+Request:
+- Add Explore Projects button in Django page also.
+
+Files touched:
+- templates/portfolio/index.html
+
+What changed:
+1. Updated Django template condition so `Explore Projects` button appears not only for first/second cards but also explicitly when project title contains `Career OS`.
+
+Why:
+- To guarantee CTA visibility for Career OS card even if ordering changes.
+
+Validation:
+- diagnostics: no errors in `templates/portfolio/index.html`
+
+Timestamp: 2026-03-20 11:32:24
+Request:
+- Add Coding Profiles section like LeetCode, CodeChef, Codeforces.
+
+Files touched:
+- portfolio/models.py
+- portfolio/admin.py
+- portfolio/serializers.py
+- portfolio/views.py
+- portfolio/api_urls.py
+- portfolio/management/commands/seed_portfolio.py
+- portfolio/migrations/0005_codingprofile.py
+- templates/portfolio/index.html
+- index.html
+- js/script.js
+- static/js/script.js
+
+What changed:
+1. Added new `CodingProfile` model with fields:
+	- platform (leetcode/codechef/codeforces/other), username, profile_url, rating
+	- icon_image, icon_url, display_order, is_active, updated_at
+2. Registered CodingProfile in Django admin with list/search/filter support.
+3. Added API support:
+	- serializer + viewset + endpoint `/api/coding-profiles/`
+4. Added Coding Profiles section to dynamic home template with admin-managed cards and profile links.
+5. Added Coding Profiles section to static index fallback with dynamic hydration target.
+6. Updated static hydration (`js/script.js`) to fetch/render coding profiles from API.
+7. Extended snapshot-signature payload and section observer tracking to include `coding-profiles`.
+8. Extended seed command with sample LeetCode/CodeChef/Codeforces records.
+
+Validation:
+- makemigrations portfolio: generated `0005_codingprofile.py`
+- migrate: applied `portfolio.0005_codingprofile` successfully
+- manage.py check: no issues
+- diagnostics: no errors in edited files
+
+Timestamp: 2026-03-20 11:35:50
+Request:
+- Do not include images for coding profiles.
+
+Files touched:
+- templates/portfolio/index.html
+- index.html
+- js/script.js
+- portfolio/management/commands/seed_portfolio.py
+
+What changed:
+1. Removed coding-profile image markup from Django template cards.
+2. Removed coding-profile image markup from static fallback card.
+3. Updated static hydration renderer to create coding-profile cards without image elements.
+4. Updated seed command to stop attaching icon images for coding profiles.
+
+Why:
+- To keep coding profile section text-only (platform, username, rating, and profile link).
+
+Validation:
+- diagnostics: no errors in edited files
+
+Timestamp: 2026-03-20 11:51:57
+Request:
+- Create a modern, clean, minimal premium footer section with branding, links, socials, contact info, resume button, bottom separator/copyright, footer scroll-to-top, fade-in compatibility, and responsive behavior.
+
+Files touched:
+- templates/portfolio/base.html
+- templates/portfolio/index.html
+- templates/portfolio/about.html
+- templates/portfolio/projects.html
+- templates/portfolio/skills.html
+- templates/portfolio/contact.html
+- static/css/style.css
+- css/style.css
+- static/js/script.js
+- js/script.js
+- index.html
+- about.html
+- projects.html
+- skills.html
+- contact.html
+
+What changed:
+1. Replaced the shared Django footer in `base.html` with a premium component including:
+	- Branding (Meka Sathya + tagline)
+	- Navigation links
+	- Social links with SVG icons (GitHub/LinkedIn/LeetCode)
+	- Contact info
+	- Rounded Download Resume button
+	- Bottom separator + copyright text
+	- Footer top button (`Back to top`)
+2. Removed per-template footer overrides so all Django pages use one reusable footer component.
+3. Replaced static page footers (`index/about/projects/skills/contact`) with matching premium footer markup.
+4. Added comprehensive footer styles in both CSS files:
+	- Clean spacing, premium cream tone blend, subtle glow/shadow
+	- Hover transitions for links/icons/buttons
+	- Responsive grid behavior for tablet/mobile
+5. Added JS support for footer top button in both scripts using smooth scroll.
+6. Footer includes `reveal` class so existing intersection animation system applies fade-in on appearance.
+
+Validation:
+- manage.py check: no issues
+- diagnostics: no errors in edited files
+
+Timestamp: 2026-03-20 11:56:22
+Request:
+- Footer social icons are too large and misaligned.
+
+Files touched:
+- templates/portfolio/base.html
+- static/css/style.css
+- css/style.css
+
+What changed:
+1. Added explicit width/height and class (`footer-icon`) to Django footer social SVG icons.
+2. Added strong CSS constraints for footer icons:
+	- fixed min/max width/height to 18px
+	- centered display block behavior
+	- enforced sizing with `!important` fallback on `.footer-icon`
+
+Why:
+- To prevent oversized default SVG rendering and ensure consistent icon alignment in footer social buttons.
+
+Validation:
+- diagnostics: no errors in edited files
+
+Timestamp: 2026-03-20 10:03:11
+Request:
+- When section details are added/removed/updated from Django admin, changes should reflect directly on portfolio pages without manually reopening pages.
+
+Files touched:
+- portfolio/views.py
+- portfolio/api_urls.py
+- static/js/script.js
+
+What changed:
+1. Added a backend change-signature endpoint:
+	- New view `portfolio_changes_signature` returns a SHA-256 signature of current portfolio data.
+	- Signature includes About, Skills, Projects, Achievements, Timeline, and ContactInfo values.
+2. Exposed new API route:
+	- `/api/portfolio-signature/` in `portfolio/api_urls.py`.
+3. Added frontend live-refresh polling:
+	- `static/js/script.js` now polls `/api/portfolio-signature/` every 10 seconds.
+	- If signature changes (admin add/edit/delete), open page auto-reloads to show latest data.
+	- Uses `no-store` behavior and skips polling when tab is hidden.
+
+Why:
+- To make admin updates visible on portfolio pages automatically while the page is open, without requiring users to manually reopen or navigate again.
+
+Validation:
+- manage.py check: no issues
+- Confirmed DB contains newly added skill record
+- Confirmed skills view rendering includes the new skill
+
+Timestamp: 2026-03-20 00:47:23
+Request:
+- Show all skills on the home section instead of only 4.
+
+Files touched:
+- portfolio/views.py
+
+What changed:
+1. Updated home context query:
+	- from Skill.objects.order_by("-id")[:4]
+	- to Skill.objects.order_by("-id")
+2. Home skills section now renders all skills from admin.
+
+Why:
+- Prevent any newly added skills from being hidden on homepage preview.
+
+Validation:
+- manage.py check: no issues
+[2026-03-20 12:02:17] Footer layout update: removed card-style container and switched to full-width black footer; improved footer text/icon alignment and icon sizing constraints in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 12:05:43] Footer alignment refinement: normalized heading and paragraph margins/line-height, ensured column top alignment with justify-content:flex-start, and standardized footer link text rhythm in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 14:25:52] Footer simplification and alignment fix: removed footer navigation links (Home/About/Projects/Skills/Contact) from templates/portfolio/base.html and static pages index.html, about.html, projects.html, skills.html, contact.html; updated footer grid to 3 columns in static/css/style.css and css/style.css for balanced alignment; validated no diagnostics errors.
+[2026-03-20 14:39:55] Footer LeetCode logo asset update: copied icons8-leetcode-50.png to images/icons8-leetcode-50.png and static/images/icons8-leetcode-50.png, replaced footer LeetCode SVGs with image icon usage in templates/portfolio/base.html and static pages index.html, about.html, projects.html, skills.html, contact.html; validated no diagnostics errors.
+[2026-03-20 14:44:44] Mobile hero layout fix: reduced portrait size and rebalanced hero text overlays for phone/tablet in css/style.css and static/css/style.css; updated hero and person image heights at <=900/<=600 breakpoints, moved badge to centered mobile position, shifted side-text upward, and hid typing chip on <=600 to prevent overlap; validated no CSS diagnostics errors.
+[2026-03-20 14:53:15] Mobile hero text refinement: adjusted <=600px hero overlay text and badge in css/style.css and static/css/style.css; reduced 'Hey, there!' font size, re-aligned left/right offsets, reduced and repositioned internship badge, enabled mobile badge wrapping, and reduced badge dot size; validated no CSS diagnostics errors.
+[2026-03-20 14:58:04] Mobile hero alignment follow-up: applied stronger <=600px positioning in css/style.css and static/css/style.css by moving 'Hey, there!' higher/smaller, increasing side offsets for symmetry, and shifting internship badge higher with reduced width/font/padding to avoid face overlap; validated no CSS diagnostics errors.
+[2026-03-20 15:03:16] Mobile hero final alignment pass: in css/style.css and static/css/style.css (<=600px) set internship badge to bottom-anchored position above name block, changed transform to translateX for stable centering, and enforced matching top/line-height alignment for 'Hey,' and 'there!'; validated no CSS diagnostics errors.
+[2026-03-20 15:09:40] Mobile hero side-text position tweak: moved 'Hey,' and 'there!' down near portrait head in <=600px rules by changing top from 24% to 30% in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 15:13:42] Mobile hero proximity tweak: moved 'Hey,' and 'there!' closer to portrait in <=600px rules by lowering top from 30% to 35% and reducing side offsets from 24px to 14px in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 15:19:07] Mobile 43% consistency fix: corrected <=600px .hero-side-text top to 43% in css/style.css to match left/right and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 15:22:09] Mobile hero side-text inward+size update: in <=600px rules moved 'Hey,' and 'there!' horizontally toward portrait by changing side offsets from 14px to 38px and increased font size from clamp(1.8rem, 8vw, 2.8rem) to clamp(2.2rem, 9.5vw, 3.4rem) in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 15:25:40] Mobile hero side-text refinement: moved 'Hey,' and 'there!' further inward toward portrait and slightly increased font size in <=600px rules for css/style.css and static/css/style.css (left/right to 56px, font-size clamp to 2.85rem/10.4vw/4.1rem, top aligned at 45%); validated no CSS diagnostics errors.
+[2026-03-20 15:28:48] Mobile hero left-text only adjustment: moved only 'Hey,' inward toward portrait by changing .hero-left left value from 56px to 72px in <=600px rules of css/style.css and static/css/style.css; kept right text unchanged; validated no CSS diagnostics errors.
+[2026-03-20 15:32:44] Mobile hero requested tweak: set .hero-left to 74px in <=600px rules and moved internship badge above 'I AM SATHYA' text by updating bottom from clamp(140px,24vh,190px) to clamp(86px,13vh,120px) in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 15:39:00] Subtitle copy cleanup: replaced resume/admin-style section subtitle text with clear one-line section explanations in index.html, projects.html, skills.html, templates/portfolio/index.html, templates/portfolio/projects.html, templates/portfolio/skills.html, and templates/portfolio/contact.html; validated no diagnostics errors.
+[2026-03-20 15:43:28] Laptop hero typography update: increased font sizes for 'I AM SATHYA' (.name-pre/.name-main) and 'DATA SCIENCE STUDENT' (.title-block span) under new 901px-1440px media rule in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 15:50:31] Laptop hero text slight increase: updated 901px-1440px typography scales in css/style.css and static/css/style.css (.name-pre clamp to 3rem/5.9vw/6.6rem, .name-main to 5.2rem/10.3vw/12rem, .title-block span to 2.6rem/5.1vw/6.2rem); validated no CSS diagnostics errors.
+[2026-03-20 15:58:40] Laptop hero text increased again: raised 901px-1440px scales in css/style.css and static/css/style.css (.name-pre to clamp(3.2rem,6.2vw,7rem), .name-main to clamp(5.6rem,10.8vw,12.8rem), .title-block span to clamp(2.8rem,5.4vw,6.8rem)); validated no CSS diagnostics errors.
+[2026-03-20 16:05:01] Hero resume CTA added: inserted a Download Resume button in hero section near folded-hands area in index.html and templates/portfolio/index.html (dynamic resume_file fallback on Django template), and added responsive .hero-resume-btn styling/positioning in css/style.css and static/css/style.css for desktop/tablet/mobile; validated no diagnostics errors.
+[2026-03-20 16:08:08] Hero resume CTA repositioned: moved .hero-resume-btn to bottom-center near folded-hands area in css/style.css and static/css/style.css by switching to left:50 + translateX(-50%) and updated breakpoint positioning/hover transforms accordingly; validated no diagnostics errors in CSS and index templates.
+[2026-03-20 16:11:42] Hero resume button horizontal shift: moved .hero-resume-btn 4% left by changing left from 50% to 46% in desktop and responsive (<=900 and <=600) rules in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 16:15:37] Resume button update: set hero Download Resume button to use 'Sathya Resume.pdf' in static index.html and Django templates/portfolio/index.html; copied PDF to static/Sathya Resume.pdf for Django static serving; validated no diagnostics errors in both edited files.
+[2026-03-20 16:21:12] Hero folded-hands white shade tweak: increased .person-img highlight by adding a subtle white drop-shadow layer in css/style.css and static/css/style.css; validated no CSS diagnostics errors.
+[2026-03-20 16:25:31] Mobile resume placement update: hid hero .hero-resume-btn at <=900px and added mobile-only Resume item to nav list in index.html and templates/portfolio/index.html; synchronized css/style.css and static/css/style.css; validated no diagnostics errors.
+[2026-03-20 16:28:09] Global resume link attachment: updated all user-facing 'Download Resume' links to use 'Sathya Resume.pdf' in static pages (index/about/projects/skills/contact) and Django templates (templates/portfolio/base.html and templates/portfolio/about.html via {% static 'Sathya Resume.pdf' %}); validated no diagnostics errors in edited files.
+[2026-03-20 16:29:56] Cleanup: removed old standalone static HTML project files (index.html, about.html, projects.html, skills.html, contact.html); retained Django templates and backend project files.
+[2026-03-20 16:37:12] Contact form feature: implemented DB save + Gmail SMTP send + WhatsApp prefilled redirect in portfolio/views.py contact_page with new settings (EMAIL_*, CONTACT_RECEIVER_EMAIL, WHATSAPP_PHONE_NUMBER) in portfolio_site/settings.py; upgraded templates/portfolio/contact.html with validated form fields, loading button spinner, inline messages, and JS auto-open WhatsApp; added supporting styles in css/style.css and static/css/style.css; validated no diagnostics errors.
+[2026-03-20 16:38:00] Contact form polish: removed duplicate spin keyframes from css/style.css and static/css/style.css after adding submit loading animation; revalidated no diagnostics errors across updated contact files.
+[2026-03-20 16:42:01] Gmail troubleshooting fix: added automatic .env loading in portfolio_site/settings.py, created .env.example with required Gmail SMTP and WhatsApp keys, and improved contact email failure message in portfolio/views.py to show exact SMTP exception; validated no diagnostics errors.
+[2026-03-20 16:44:33] Removed backend Gmail integration for contact flow to support external email service (EmailJS): deleted send_mail logic from portfolio/views.py contact_page, removed SMTP email settings block from portfolio_site/settings.py, and removed .env.example created for Gmail setup; contact form now saves message + WhatsApp redirect only.
+[2026-03-20 16:51:36] EmailJS wiring: integrated contact form frontend send in templates/portfolio/contact.html using service_id=service_n4f64bj, template_id=template_vifr4cy, and public_key=m0G0dBKrJjP69K0qh; on success submits form for Django DB save + WhatsApp redirect; includes loading state and error recovery.
+[2026-03-20 16:55:52] Contact/social update: removed LeetCode button from templates/portfolio/contact.html contact form direct-reach section; updated LinkedIn profile URL everywhere from generic linkedin.com to https://www.linkedin.com/in/mekasathya/ in templates/portfolio/base.html and portfolio/management/commands/seed_portfolio.py; validated no diagnostics errors and no remaining old LinkedIn URL occurrences.

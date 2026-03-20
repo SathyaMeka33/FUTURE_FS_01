@@ -1,0 +1,41 @@
+Veera Venkata Satya Narayana Meka
+Rajahmundry, Andhra Pradesh,+91 9703629727
+innovativeden0@gmail.com LinkedIn — LeetCode
+OBJECTIVE
+Motivated engineering student seeking a software or data-focused internship to apply strong fundamentals in
+Python, Java, SQL, and Git while contributing to scalable, high-quality solutions in a fast-paced engineering
+environment.
+EDUCATION
+Bachelor of T echnology (B.T ech) in Data SciencePresent
+Aditya College of Engineering and Technology
+Relevant Coursework: Data Structures, Object-Oriented Programming, Database Management Systems, Statis-
+tics, Python Programming, SQL
+Intermediate / 12th StandardCompleted
+Board/College: Rajiv Gandhi University of Knowledge Technologies
+Percentage: 94.6
+SSC / 10th Standard Completed
+School/Board: ZPHS Vetlapalem
+Percentage: 94.5
+TECHNICAL SKILLS
+•Programming Languages:Python, Java, C
+•F rameworks:Django
+•Databases:SQL
+•V ersion Control:Git, GitHub
+•Developer T ools:VS Code
+•Core Concepts:Data Structures, Algorithms, OOP, DBMS, Problem Solving
+PROJECTS
+Hackathon Project — GFG & GDG Collaboration
+•Collaborated in a team to design and implement a solution during a competitive hackathon environment.
+•Applied problem-solving skills, coding best practices, and version control using GitHub.
+Career OS — AI-Powered Career Guidance Platform
+•Developed a career guidance platform that provides personalized career recommendations based on user
+skills and interests.
+•Implemented backend logic and database integration for managing user profiles and recommendations.
+•Utilized Python, Django, and SQL for building scalable and structured application workflows.
+CERTIFICATIONS
+•Azure Essentials Certification — Microsoft & LinkedIn Learning
+•ATF 2025 — Qualified Second Round Candidate
+ACHIEVEMENTS & ACTIVITIES
+•Participated in hackathons and competitive programming events.
+•Actively practice problem-solving on platforms such as LeetCode.
+1

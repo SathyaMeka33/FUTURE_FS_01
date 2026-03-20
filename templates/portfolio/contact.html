@@ -1,0 +1,138 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Contact | Sathya Narayana Meka{% endblock %}
+{% block meta_description %}Working contact form that stores messages in Django database.{% endblock %}
+
+{% block content %}
+<section class="reveal" style="padding-top:130px;" id="contact">
+  <h1 class="section-title">Contact</h1>
+  <p class="section-subtitle">{{ contact_info.contact_subtitle|default:'Send a quick message for collaborations, internships, or project discussions.' }}</p>
+
+  <div class="contact-wrap">
+    <article class="glass-panel reveal">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-style:italic; margin-bottom:12px;">Send a Message</h3>
+
+      <form id="contactForm" class="form-grid" method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="field">
+          <label for="id_name">Name</label>
+          {{ form.name }}
+          <p id="nameError" class="error-msg">{% if form.name.errors %}{{ form.name.errors.0 }}{% endif %}</p>
+        </div>
+
+        <div class="field">
+          <label for="id_email">Email</label>
+          {{ form.email }}
+          <p id="emailError" class="error-msg">{% if form.email.errors %}{{ form.email.errors.0 }}{% endif %}</p>
+        </div>
+
+        <div class="field">
+          <label for="id_message">Message</label>
+          {{ form.message }}
+          <p id="messageError" class="error-msg">{% if form.message.errors %}{{ form.message.errors.0 }}{% endif %}</p>
+        </div>
+
+        <button class="btn magnetic contact-submit-btn" type="submit" id="contactSubmitBtn">
+          <span class="btn-text">Send Message</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+
+        {% for message in messages %}
+        <p id="formFeedback" class="{% if 'error' in message.tags %}error-msg show-error{% else %}success-message show{% endif %}">{{ message }}</p>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+        <p class="error-msg show-error">{{ form.non_field_errors.0 }}</p>
+        {% endif %}
+      </form>
+    </article>
+
+    <article class="contact-card reveal">
+      <h3>Direct Reach</h3>
+      <p>Prefer direct communication? You can reach me through phone, email, and coding platforms listed below.</p>
+      <p style="margin-top:10px;"><strong>Location:</strong> {{ contact_info.location|default:'Rajahmundry, Andhra Pradesh' }}</p>
+      <p><strong>Phone:</strong> {{ contact_info.phone|default:'+91 9703629727' }}</p>
+      <p><strong>Email:</strong> {{ contact_info.email|default:'innovativeden0@gmail.com' }}</p>
+      <div class="social-row">
+        <a class="social-btn magnetic" href="https://www.linkedin.com/in/mekasathya/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+      <div class="chips" style="margin-top:24px;">
+        <span class="chip magnetic">Software Internships</span>
+        <span class="chip magnetic">Data-focused Roles</span>
+        <span class="chip magnetic">Open to opportunities</span>
+      </div>
+    </article>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_after_main %}
+<div id="whatsappRedirect" data-url="{{ whatsapp_redirect_url|default:'' }}"></div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function () {
+    const form = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('contactSubmitBtn');
+    const whatsappNode = document.getElementById('whatsappRedirect');
+
+    if (typeof emailjs !== 'undefined') {
+      emailjs.init('m0G0dBKrJjP69K0qh');
+    }
+
+    if (form && submitBtn) {
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const nameInput = document.getElementById('id_name');
+        const emailInput = document.getElementById('id_email');
+        const messageInput = document.getElementById('id_message');
+
+        if (!nameInput || !emailInput || !messageInput) {
+          return;
+        }
+
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const message = messageInput.value.trim();
+
+        if (!name || !email || !message) {
+          return;
+        }
+
+        submitBtn.classList.add('is-loading');
+        submitBtn.setAttribute('disabled', 'disabled');
+
+        try {
+          if (typeof emailjs !== 'undefined') {
+            await emailjs.send(
+              'service_n4f64bj',
+              'template_vifr4cy',
+              {
+                from_name: name,
+                from_email: email,
+                message: message,
+                sent_at: new Date().toLocaleString()
+              },
+              'm0G0dBKrJjP69K0qh'
+            );
+          }
+          form.submit();
+        } catch (error) {
+          submitBtn.classList.remove('is-loading');
+          submitBtn.removeAttribute('disabled');
+          console.error('EmailJS send failed:', error);
+        }
+      });
+    }
+
+    if (whatsappNode) {
+      const url = whatsappNode.dataset.url || '';
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    }
+  })();
+</script>
+{% endblock %}
+

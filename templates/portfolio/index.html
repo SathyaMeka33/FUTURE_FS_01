@@ -1,0 +1,299 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}Sathya Narayana Meka | Portfolio{% endblock %}
+{% block meta_description %}Dynamic portfolio of Sathya Narayana Meka powered by Django admin.{% endblock %}
+
+{% block preloader_content %}
+<div class="preloader-inner">
+  <p class="welcome-kicker">Welcome to</p>
+  <h1 class="welcome-title">Sathya Portfolio</h1>
+  <p class="welcome-sub">Building scalable software and data-driven solutions</p>
+  <div class="loader-core"></div>
+</div>
+{% endblock %}
+
+{% block nav_links %}
+<li><a href="#home" class="nav-link active">Home</a></li>
+<li><a href="#about" class="nav-link">About</a></li>
+<li><a href="#projects" class="nav-link">Projects</a></li>
+<li><a href="#achievements" class="nav-link">Achievements</a></li>
+<li><a href="#certifications" class="nav-link">Certifications</a></li>
+<li><a href="#coding-profiles" class="nav-link">Coding Profiles</a></li>
+<li><a href="#skills" class="nav-link">Skills</a></li>
+<li><a href="#contact" class="nav-link">Contact</a></li>
+<li class="mobile-resume-item"><a href="{% static 'Sathya Resume.pdf' %}" class="nav-link" target="_blank" rel="noopener noreferrer">Resume</a></li>
+{% endblock %}
+
+{% block content %}
+<section class="hero" id="home">
+  <div class="hero-side-text hero-left fi" style="--d:.05s" aria-hidden="true">Hey,</div>
+  <div class="hero-side-text hero-right fi" style="--d:.08s" aria-hidden="true">there!</div>
+
+  <div class="person-wrap fi" style="--d:.08s">
+    {% if about and about.profile_image_source %}
+    <img class="person-img" src="{{ about.profile_image_source }}" alt="Sathya Narayana Meka" />
+    {% else %}
+    <img class="person-img" src="{% static 'images/sathya_nobg.png' %}" alt="Sathya Narayana Meka" />
+    {% endif %}
+  </div>
+
+  <div class="badge fi" style="--d:.32s">
+    <span class="dot"></span>
+    Open to software and data internships
+  </div>
+
+  <div class="spec fi" style="--d:.45s">
+    Skilled in Python, Java,<br />SQL, Django, Git, and strong<br />problem-solving foundations.
+  </div>
+
+  <div class="name-block fi" style="--d:.18s">
+    <span class="name-pre">I AM</span>
+    <span class="name-main">Sathya</span>
+  </div>
+
+  <div class="title-block fi" style="--d:.25s">
+    <span>DATA</span>
+    <span>SCIENCE</span>
+    <span>STUDENT</span>
+  </div>
+
+  <div class="typing-wrap fi" style="--d:.34s" aria-live="polite">
+    <span id="typewriterText" class="typing-text"></span><span class="typing-cursor" aria-hidden="true">|</span>
+  </div>
+
+  <a href="{% static 'Sathya Resume.pdf' %}" class="hero-resume-btn fi magnetic" style="--d:.40s" target="_blank" rel="noopener noreferrer">Download Resume</a>
+</section>
+
+<section id="about" class="reveal">
+  <h2 class="section-title">About</h2>
+  {% if about %}
+  <p class="section-subtitle">{{ about.subtitle|default:about.description|truncatechars:220 }}</p>
+  {% else %}
+  <p class="section-subtitle">Motivated engineering student seeking software or data-focused internship opportunities to contribute scalable, high-quality solutions in fast-paced teams.</p>
+  {% endif %}
+
+  <div class="split-grid">
+    <article class="preview-card">
+      <h3>Career Objective</h3>
+      {% if about %}
+      <p>{{ about.career_objective|default:about.description|truncatechars:260 }}</p>
+      {% else %}
+      <p>I aim to apply strong fundamentals in Python, Java, SQL, and Git while learning through real-world engineering challenges and collaborative development.</p>
+      {% endif %}
+      <div class="chips">
+        <span class="chip magnetic">Data Structures</span>
+        <span class="chip magnetic">OOP</span>
+        <span class="chip magnetic">Problem Solving</span>
+      </div>
+    </article>
+
+    <article class="preview-card">
+      <h3>Education Snapshot</h3>
+      {% if about and about.education_snapshot %}
+      <p>{{ about.education_snapshot }}</p>
+      {% else %}
+      <p>B.Tech in Data Science at Aditya College of Engineering and Technology, with strong academic performance in both intermediate and SSC levels.</p>
+      {% endif %}
+      <div class="section-actions">
+        <a href="{% url 'about' %}" class="btn page-link magnetic">View Full About</a>
+        <a href="{% url 'skills' %}" class="btn-outline page-link magnetic">See Skills</a>
+      </div>
+    </article>
+  </div>
+
+  <div class="about-stats reveal" aria-label="Live profile stats" style="margin-top:24px;">
+    <article class="stat-card">
+      <p class="stat-label">Projects</p>
+      <p class="stat-value"><span class="count-value" data-target="{{ projects_count|default:0 }}" data-suffix="+">0</span></p>
+    </article>
+    <article class="stat-card">
+      <p class="stat-label">Skills</p>
+      <p class="stat-value"><span class="count-value" data-target="{{ skills_count|default:0 }}" data-suffix="+">0</span></p>
+    </article>
+    <article class="stat-card">
+      <p class="stat-label">B.Tech CGPA</p>
+      <p class="stat-value"><span class="count-value" data-target="{{ about.cgpa|default_if_none:0 }}" data-decimals="2">0.00</span></p>
+    </article>
+  </div>
+
+  <div class="timeline-side-heading reveal" style="margin-top:38px;">
+    <h3>TIMELINE</h3>
+  </div>
+
+  <div class="timeline reveal" style="margin-top:12px;">
+    {% for entry in timeline_entries %}
+    <article class="timeline-card timeline-item">
+      <p class="meta">{{ entry.meta_label }}</p>
+      <h3>{{ entry.title }}</h3>
+      <p>{{ entry.description }}</p>
+    </article>
+    {% empty %}
+    <article class="timeline-card timeline-item">
+      <p class="meta">Present</p>
+      <h3>B.Tech in Data Science</h3>
+      <p>Aditya College of Engineering and Technology. Coursework includes Data Structures, OOP, DBMS, Statistics, Python Programming, and SQL.</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="projects" class="reveal">
+  <h2 class="section-title">Projects</h2>
+  <p class="section-subtitle">A selection of projects that highlight practical engineering, backend integration, and team collaboration.</p>
+  <div class="split-grid">
+    {% for project in projects %}
+    <article class="preview-card">
+      <h3>{{ project.title }}</h3>
+      <p>{{ project.description|truncatechars:170 }}</p>
+      {% if forloop.counter == 2 or forloop.first or 'career os' in project.title|lower %}
+      <div class="section-actions">
+        <a href="{% url 'projects' %}" class="btn page-link magnetic">Explore Projects</a>
+      </div>
+      {% endif %}
+    </article>
+    {% empty %}
+    <article class="preview-card">
+      <h3>No Projects Yet</h3>
+      <p>Add projects from Django admin to show them here.</p>
+      <div class="section-actions">
+        <a href="{% url 'projects' %}" class="btn page-link magnetic">Explore Projects</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="achievements" class="reveal">
+  <h2 class="section-title">Achievements</h2>
+  <p class="section-subtitle">Key milestones from hackathons, technical learning, and performance-driven outcomes.</p>
+
+  <div class="achievement-grid">
+    {% for achievement in achievements %}
+    <article class="achievement-card">
+      <figure class="achievement-media">
+        {% if achievement.image_source %}
+        <img src="{{ achievement.image_source }}" alt="{{ achievement.title }}" />
+        {% endif %}
+      </figure>
+      <h3>{{ achievement.title }}</h3>
+      <p>{{ achievement.description }}</p>
+    </article>
+    {% empty %}
+    <article class="achievement-card">
+      <figure class="achievement-media">
+        <img src="{% static 'images/ATF.png' %}" alt="ATF 2025 qualification" />
+      </figure>
+      <h3>ATF 2025</h3>
+      <p>Qualified as a second round candidate.</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="certifications" class="reveal">
+  <h2 class="section-title">Certifications</h2>
+  <p class="section-subtitle">Verified certifications that showcase continuous learning and applied technical knowledge.</p>
+
+  <div class="achievement-grid">
+    {% for certification in certifications %}
+    <article class="achievement-card">
+      <figure class="achievement-media">
+        {% if certification.image_source %}
+        <img src="{{ certification.image_source }}" alt="{{ certification.title }}" />
+        {% endif %}
+      </figure>
+      <h3>{{ certification.title }}</h3>
+      {% if certification.issuer %}
+      <p><strong>{{ certification.issuer }}</strong></p>
+      {% endif %}
+      {% if certification.description %}
+      <p>{{ certification.description }}</p>
+      {% endif %}
+      {% if certification.credential_url %}
+      <div class="section-actions" style="justify-content:center; margin-top:8px;">
+        <a href="{{ certification.credential_url }}" class="btn-outline magnetic" target="_blank" rel="noopener noreferrer">View Credential</a>
+      </div>
+      {% endif %}
+    </article>
+    {% empty %}
+    <article class="achievement-card">
+      <h3>No Certifications Yet</h3>
+      <p>Add certifications from Django admin to display them here.</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="coding-profiles" class="reveal">
+  <h2 class="section-title">Coding Profiles</h2>
+  <p class="section-subtitle">Track my competitive programming and problem-solving profiles.</p>
+
+  <div class="achievement-grid">
+    {% for coding_profile in coding_profiles %}
+    <article class="achievement-card">
+      <h3>{{ coding_profile.get_platform_display }}</h3>
+      <p><strong>{{ coding_profile.username }}</strong></p>
+      {% if coding_profile.rating %}
+      <p>Rating: {{ coding_profile.rating }}</p>
+      {% endif %}
+      <div class="section-actions" style="justify-content:center; margin-top:8px;">
+        <a href="{{ coding_profile.profile_url }}" class="btn-outline magnetic" target="_blank" rel="noopener noreferrer">Open Profile</a>
+      </div>
+    </article>
+    {% empty %}
+    <article class="achievement-card">
+      <h3>No Coding Profiles Yet</h3>
+      <p>Add LeetCode, CodeChef, and Codeforces links from admin.</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="skills" class="reveal" data-skills-section>
+  <h2 class="section-title">Core Skills</h2>
+  <p class="section-subtitle">Core technical skills across programming, tools, and engineering fundamentals used in real projects.</p>
+  <div class="skills-showcase">
+    <div class="skill-card-grid">
+      {% for skill in skills_home %}
+      <article class="skill-tile magnetic">
+        <div class="skill-icon">
+          {% if skill.icon_source %}
+          <img src="{{ skill.icon_source }}" alt="{{ skill.name }} icon" />
+          {% else %}
+          <img src="{% static 'images/brain-circuit.png' %}" alt="Skill icon" />
+          {% endif %}
+        </div>
+        <p class="skill-name">{{ skill.name|upper }}</p>
+      </article>
+      {% empty %}
+      <article class="skill-tile magnetic">
+        <div class="skill-icon"><img src="{% static 'images/brain-circuit.png' %}" alt="Skill icon" /></div>
+        <p class="skill-name">ADD SKILLS IN ADMIN</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="section-actions">
+      <a href="{% url 'skills' %}" class="btn page-link magnetic">Open Skills Page</a>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="reveal">
+  <h2 class="section-title">Let us Build Something</h2>
+  <p class="section-subtitle">Currently open to software engineering and data-focused internship opportunities.</p>
+  <div class="section-actions">
+    <a href="{% url 'contact' %}" class="btn page-link magnetic">Go to Contact</a>
+    <a href="{% url 'projects' %}" class="btn-outline page-link magnetic">View Case Studies</a>
+  </div>
+</section>
+
+<section class="hire-cta reveal">
+  <p class="hire-cta-kicker">Wanna work together?</p>
+  <h2 class="hire-cta-title">Hire ME!</h2>
+  <div class="section-actions" style="justify-content:center; margin-top:18px;">
+    <a href="{% url 'contact' %}" class="btn page-link magnetic">Hire ME</a>
+  </div>
+</section>
+{% endblock %}
+

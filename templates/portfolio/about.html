@@ -1,0 +1,130 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}About | Sathya Narayana Meka{% endblock %}
+{% block meta_description %}About section managed dynamically from Django admin.{% endblock %}
+
+{% block content %}
+<section class="reveal" style="padding-top:130px;">
+  <h1 class="section-title">About Me</h1>
+  {% if about %}
+  <p class="section-subtitle">{{ about.description|truncatechars:220 }}</p>
+  {% else %}
+  <p class="section-subtitle">Veera Venkata Sathya Narayana Meka from Rajahmundry, Andhra Pradesh. Motivated engineering student focused on software and data-driven development.</p>
+  {% endif %}
+
+  <div class="about-grid">
+    <figure class="profile-photo reveal">
+      {% if about and about.profile_image_source %}
+      <img src="{{ about.profile_image_source }}" alt="Sathya Narayana Meka portrait" />
+      {% else %}
+      <img src="{% static 'images/sathya_nobg.png' %}" alt="Sathya Narayana Meka portrait" />
+      {% endif %}
+    </figure>
+
+    <div class="reveal">
+      {% if about %}
+      <p class="about-intro">{{ about.description }}</p>
+      {% else %}
+      <p class="about-intro">I am pursuing B.Tech in Data Science at Aditya College of Engineering and Technology. I am currently seeking internship opportunities where I can apply Python, Java, SQL, and Git skills to build reliable, scalable software solutions.</p>
+      {% endif %}
+
+      <p class="about-intro" style="margin-top:16px;">{{ about.intro_secondary|default:'I actively practice problem-solving through competitive programming and LeetCode, and I enjoy working in collaborative environments that value code quality, structured workflows, and continuous learning.' }}</p>
+
+      <div class="chips" style="margin-top:18px;">
+        <span class="chip magnetic">Python</span>
+        <span class="chip magnetic">Java</span>
+        <span class="chip magnetic">SQL</span>
+        <span class="chip magnetic">Git &amp; GitHub</span>
+      </div>
+
+      <div class="section-actions" style="margin-top:20px;">
+        <a href="{% static 'Sathya Resume.pdf' %}" class="btn magnetic" target="_blank" rel="noopener noreferrer">Download Resume</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-stats reveal" aria-label="Live profile stats" style="margin-top:24px;">
+    <article class="stat-card">
+      <p class="stat-label">Projects</p>
+      <p class="stat-value"><span class="count-value" data-target="{{ projects_count|default:0 }}" data-suffix="+">0</span></p>
+    </article>
+    <article class="stat-card">
+      <p class="stat-label">Skills</p>
+      <p class="stat-value"><span class="count-value" data-target="{{ skills_count|default:0 }}" data-suffix="+">0</span></p>
+    </article>
+    <article class="stat-card">
+      <p class="stat-label">B.Tech CGPA</p>
+      <p class="stat-value"><span class="count-value" data-target="{{ about.cgpa|default_if_none:0 }}" data-decimals="2">0.00</span></p>
+    </article>
+  </div>
+
+  <div class="timeline-side-heading reveal" style="margin-top:50px;">
+    <h3>TIMELINE</h3>
+  </div>
+
+  <div class="timeline reveal" style="margin-top:12px;">
+    {% for entry in timeline_entries %}
+    <article class="timeline-card timeline-item">
+      <p class="meta">{{ entry.meta_label }}</p>
+      <h3>{{ entry.title }}</h3>
+      <p>{{ entry.description }}</p>
+    </article>
+    {% empty %}
+    <article class="timeline-card timeline-item">
+      <p class="meta">Present</p>
+      <h3>B.Tech in Data Science</h3>
+      <p>Aditya College of Engineering and Technology. Coursework includes Data Structures, OOP, DBMS, Statistics, Python Programming, and SQL.</p>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="highlight-grid reveal">
+    {% for achievement in achievements %}
+    <article class="highlight-card">
+      <h3>{{ achievement.title }}</h3>
+      <p>{{ achievement.description }}</p>
+    </article>
+    {% empty %}
+    <article class="highlight-card">
+      <h3>Certification</h3>
+      <p>Azure Essentials Certification from Microsoft and LinkedIn Learning.</p>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="timeline-side-heading reveal" style="margin-top:42px;">
+    <h3>CERTIFICATIONS</h3>
+  </div>
+
+  <div class="achievement-grid reveal" style="margin-top:12px;">
+    {% for certification in certifications %}
+    <article class="achievement-card">
+      <figure class="achievement-media">
+        {% if certification.image_source %}
+        <img src="{{ certification.image_source }}" alt="{{ certification.title }}" />
+        {% endif %}
+      </figure>
+      <h3>{{ certification.title }}</h3>
+      {% if certification.issuer %}
+      <p><strong>{{ certification.issuer }}</strong></p>
+      {% endif %}
+      {% if certification.description %}
+      <p>{{ certification.description }}</p>
+      {% endif %}
+      {% if certification.credential_url %}
+      <div class="section-actions" style="justify-content:center; margin-top:8px;">
+        <a href="{{ certification.credential_url }}" class="btn-outline magnetic" target="_blank" rel="noopener noreferrer">View Credential</a>
+      </div>
+      {% endif %}
+    </article>
+    {% empty %}
+    <article class="achievement-card">
+      <h3>No Certifications Yet</h3>
+      <p>Add certifications from Django admin to display them here.</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
