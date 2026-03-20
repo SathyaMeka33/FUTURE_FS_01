@@ -1,1 +1,1 @@
-web: python manage.py ensure_admin || true; exec gunicorn portfolio_site.wsgi:application --bind 0.0.0.0:${PORT:-10000} --log-file -
+web: echo "[BOOT] starting web process"; echo "[BOOT] PORT=${PORT:-10000}"; echo "[BOOT] ADMIN_USERNAME=${ADMIN_USERNAME:-<unset>} DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME:-<unset>}"; python manage.py ensure_admin || true; exec gunicorn portfolio_site.wsgi:application --bind 0.0.0.0:${PORT:-10000} --log-file -
