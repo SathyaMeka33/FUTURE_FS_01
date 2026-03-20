@@ -514,3 +514,4 @@ Validation:
 [2026-03-20 18:01:28] Render DisallowedHost fix: expanded default DJANGO_ALLOWED_HOSTS fallback in portfolio_site/settings.py to include future-fs-01-zdsi.onrender.com and .onrender.com to prevent host header rejection when env var is missing.
 [2026-03-20 18:08:45] Render DB bootstrap fix: updated render.yaml and Procfile start commands to run 'python manage.py migrate' before starting gunicorn, ensuring missing tables (e.g., portfolio_about) are created on startup.
 [2026-03-20 18:19:21] Render 502 stabilization: simplified start commands in render.yaml and Procfile to gunicorn only; migrations remain in build command to avoid startup crash loops.
+[2026-03-20 18:40:56] Render build fix: added Pillow>=10.0 to requirements.txt to satisfy Django ImageField checks for portfolio models during collectstatic/migrate build steps.
