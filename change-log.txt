@@ -1,0 +1,14 @@
+2026-03-27
+- Updated index.html:
+  - Increased Projects stat target from 3 to 4.
+  - Added a new project preview card titled "New Project" in the homepage Projects section.
+- Updated projects.html:
+  - Added a new project card titled "New Project" in the projects grid.
+  - Wired project image to ./media/projects/image.png.
+
+2026-03-27
+- Updated index.html:
+  - Replaced "New Project" preview card content with "SkyFit Gym Website" summary.
+- Updated projects.html:
+  - Replaced "New Project" card title, modal details, description, alt text, and tags with full SkyFit Gym Website details.
+  - Kept image path as ./media/projects/image.png for SkyFit project preview.

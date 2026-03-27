@@ -1,0 +1,36 @@
+=====================================================
+AUDIT LOG - Static Portfolio Changes
+=====================================================
+
+[2026-03-27] - README.md Updated for Netlify Deployment
+---------------------------
+File Modified: README.md
+
+Changes Made:
+- Removed all Django, Python, and database references
+- Updated from "Full-stack Django application" to "Static website"
+- Changed deployment from Render to Netlify with 3 deployment methods
+- Updated Tech Stack section
+- Removed Backend Features section (Django Admin, Database Management, etc.)
+- Updated Installation section (removed venv, migrations, superuser setup)
+- Updated Usage section (changed from Django admin to direct HTML editing)
+- Updated Project Structure (removed Django folder structure)
+- Added Live Demo section with link to sathyastack.netlify.app
+- Updated Contact section with actual information:
+  * Portfolio: https://sathyastack.netlify.app
+  * GitHub: https://github.com/SathyaMeka33
+  * LinkedIn: https://linkedin.com/in/mekasathya
+  * Email: innovativeden0@gmail.com
+- Updated Acknowledgments (removed Django community, added Netlify)
+- Removed Bootstrap Icons reference
+- Updated Changelog reference to change-log.txt
+
+Configuration:
+File now reflects:
+✓ Static HTML/CSS/JavaScript website (no backend database)
+✓ Deployed on Netlify
+✓ All user contact information properly linked
+✓ Direct HTML file editing for content updates
+✓ Three deployment method options documented
+
+=====================================================
